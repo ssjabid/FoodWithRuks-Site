@@ -9,7 +9,7 @@ export function Card({ className, hover = true, children, ...props }: CardProps)
   return (
     <div
       className={cn(
-        "bg-[var(--color-surface)] rounded-[var(--radius-lg)] border border-[var(--color-border)] overflow-hidden",
+        "bg-[var(--color-elevated)] rounded-[var(--radius-lg)] border border-[var(--color-border)] overflow-hidden",
         "shadow-[var(--shadow-sm)]",
         hover && "card-hover",
         className
@@ -23,7 +23,7 @@ export function Card({ className, hover = true, children, ...props }: CardProps)
 
 export function CardContent({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn("p-5", className)} {...props}>
+    <div className={cn("p-4", className)} {...props}>
       {children}
     </div>
   );

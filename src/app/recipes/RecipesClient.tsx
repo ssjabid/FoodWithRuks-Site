@@ -21,7 +21,7 @@ export function RecipesClient({ initialRecipes }: RecipesClientProps) {
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("newest");
   const [showFavorites, setShowFavorites] = useState(false);
-  const [filtersOpen, setFiltersOpen] = useState(true);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const debouncedSearch = useDebounce(search);
 
@@ -107,112 +107,124 @@ export function RecipesClient({ initialRecipes }: RecipesClientProps) {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
-      {/* Header */}
-      <div className="mb-12">
-        <h1 className="font-extrabold tracking-tight text-3xl sm:text-4xl lg:text-5xl text-[var(--color-text-primary)] mb-3">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+      {/* Page Header */}
+      <div className="mb-8 sm:mb-10">
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">
           Recipes
         </h1>
-        <p className="text-[var(--color-text-secondary)] text-lg">
+        <p className="text-[var(--color-text-secondary)] text-base sm:text-lg">
           Discover delicious recipes for every occasion
         </p>
       </div>
 
-      {/* Search + Sort row */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
-        <div className="flex-1">
-          <Input
-            type="search"
-            placeholder="Search recipes..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-        <div className="flex gap-3">
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="px-3 py-2 rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] text-sm"
-          >
-            {SORT_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
-          <button
-            onClick={() => setShowFavorites(!showFavorites)}
-            className={cn(
-              "px-4 py-2 rounded-[var(--radius-sm)] border text-sm font-medium filter-pill",
-              showFavorites
-                ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white"
-                : "border-[var(--color-border)] text-[var(--color-text-secondary)]"
-            )}
-          >
-            {showFavorites ? "\u2665 Favorites" : "\u2661 Favorites"}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile filter toggle */}
-      <button
-        onClick={() => setFiltersOpen(!filtersOpen)}
-        className="md:hidden flex items-center gap-2 text-sm font-medium text-[var(--color-text-primary)] mb-4"
-      >
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-        </svg>
-        Filters {activeFilterCount > 0 && `(${activeFilterCount})`}
-        <svg className={cn("w-4 h-4 transition-transform", filtersOpen && "rotate-180")} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-
-      {/* 4-Group Filter System */}
-      <div className={cn("space-y-4 mb-8", !filtersOpen && "hidden md:block")}>
-        <FilterGroup
-          label="Category"
-          items={RECIPE_CATEGORIES.map(c => ({ value: c.value, label: c.label }))}
-          selected={selectedCategories}
-          onToggle={(v) => toggleFilter(v, selectedCategories, setSelectedCategories)}
-        />
-        <FilterGroup
-          label="Meal Type"
-          items={MEAL_TYPES.map(m => ({ value: m.value, label: m.label }))}
-          selected={selectedMealTypes}
-          onToggle={(v) => toggleFilter(v, selectedMealTypes, setSelectedMealTypes)}
-        />
-        <FilterGroup
-          label="Special Diet"
-          items={DIETARY_TAGS.map(tag => ({ value: tag, label: tag }))}
-          selected={selectedDietaryTags}
-          onToggle={(v) => toggleFilter(v, selectedDietaryTags, setSelectedDietaryTags)}
-        />
-        <FilterGroup
-          label="Special Occasion"
-          items={SPECIAL_OCCASIONS.map(o => ({ value: o.value, label: o.label }))}
-          selected={selectedOccasions}
-          onToggle={(v) => toggleFilter(v, selectedOccasions, setSelectedOccasions)}
+      {/* Search bar — full width */}
+      <div className="mb-4">
+        <Input
+          type="search"
+          placeholder="Search recipes..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
-      {/* Active filters bar */}
-      {activeFilterCount > 0 && (
-        <div className="flex items-center gap-3 mb-6">
-          <span className="text-sm text-[var(--color-text-secondary)]">
-            {activeFilterCount} filter{activeFilterCount !== 1 ? "s" : ""} active
-          </span>
+      {/* Filter bar */}
+      <div className="flex flex-wrap items-center gap-2 mb-6">
+        {/* Filters toggle */}
+        <button
+          onClick={() => setFiltersOpen(!filtersOpen)}
+          className={cn(
+            "h-9 px-4 rounded-full text-sm font-medium inline-flex items-center gap-2 filter-pill",
+            filtersOpen || activeFilterCount > 0
+              ? "bg-[var(--color-primary)] text-white border border-[var(--color-primary)]"
+              : "border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-primary)]"
+          )}
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          </svg>
+          Filters
+          {activeFilterCount > 0 && (
+            <span className="w-5 h-5 rounded-full bg-white text-[var(--color-primary)] text-xs font-bold flex items-center justify-center">
+              {activeFilterCount}
+            </span>
+          )}
+        </button>
+
+        {/* Sort dropdown */}
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="h-9 px-4 rounded-full border border-[var(--color-border)] bg-[var(--color-elevated)] text-[var(--color-text-primary)] text-sm font-medium"
+        >
+          {SORT_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+
+        {/* Favorites toggle */}
+        <button
+          onClick={() => setShowFavorites(!showFavorites)}
+          className={cn(
+            "h-9 px-4 rounded-full text-sm font-medium filter-pill",
+            showFavorites
+              ? "bg-[var(--color-primary)] text-white border border-[var(--color-primary)]"
+              : "border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-primary)]"
+          )}
+        >
+          {showFavorites ? "\u2665 Favorites" : "\u2661 Favorites"}
+        </button>
+
+        {/* Clear all */}
+        {activeFilterCount > 0 && (
           <button
             onClick={clearFilters}
-            className="text-sm text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] font-medium transition-colors"
+            className="h-9 px-4 rounded-full text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] transition-colors"
           >
             Clear all
           </button>
+        )}
+
+        {/* Results count */}
+        <span className="ml-auto text-sm text-[var(--color-text-tertiary)]">
+          {filteredRecipes.length} recipe{filteredRecipes.length !== 1 ? "s" : ""}
+        </span>
+      </div>
+
+      {/* Expandable filter panel */}
+      {filtersOpen && (
+        <div className="mb-6 p-4 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-elevated)]">
+          <div className="space-y-4">
+            <FilterGroup
+              label="Category"
+              items={RECIPE_CATEGORIES.map(c => ({ value: c.value, label: c.label }))}
+              selected={selectedCategories}
+              onToggle={(v) => toggleFilter(v, selectedCategories, setSelectedCategories)}
+            />
+            <div className="border-t border-[var(--color-border)]" />
+            <FilterGroup
+              label="Meal Type"
+              items={MEAL_TYPES.map(m => ({ value: m.value, label: m.label }))}
+              selected={selectedMealTypes}
+              onToggle={(v) => toggleFilter(v, selectedMealTypes, setSelectedMealTypes)}
+            />
+            <div className="border-t border-[var(--color-border)]" />
+            <FilterGroup
+              label="Diet"
+              items={DIETARY_TAGS.map(tag => ({ value: tag, label: tag }))}
+              selected={selectedDietaryTags}
+              onToggle={(v) => toggleFilter(v, selectedDietaryTags, setSelectedDietaryTags)}
+            />
+            <div className="border-t border-[var(--color-border)]" />
+            <FilterGroup
+              label="Occasion"
+              items={SPECIAL_OCCASIONS.map(o => ({ value: o.value, label: o.label }))}
+              selected={selectedOccasions}
+              onToggle={(v) => toggleFilter(v, selectedOccasions, setSelectedOccasions)}
+            />
+          </div>
         </div>
       )}
-
-      {/* Results count */}
-      <p className="text-sm text-[var(--color-text-secondary)] mb-8">
-        {filteredRecipes.length} recipe{filteredRecipes.length !== 1 ? "s" : ""} found
-      </p>
 
       <RecipeGrid recipes={filteredRecipes} />
     </div>
@@ -231,17 +243,17 @@ function FilterGroup({
   onToggle: (value: string) => void;
 }) {
   return (
-    <div>
-      <p className="text-xs font-medium text-[var(--color-text-tertiary)] uppercase tracking-wider mb-2">
+    <div className="flex items-start gap-3">
+      <span className="text-xs font-medium text-[var(--color-text-tertiary)] uppercase tracking-wider shrink-0 pt-2 w-20">
         {label}
-      </p>
-      <div className="flex flex-wrap gap-2 overflow-x-auto scrollbar-hide">
+      </span>
+      <div className="flex flex-wrap gap-2">
         {items.map((item) => (
           <button
             key={item.value}
             onClick={() => onToggle(item.value)}
             className={cn(
-              "px-4 py-1.5 rounded-[var(--radius-badge)] text-sm font-medium whitespace-nowrap filter-pill",
+              "h-9 px-4 rounded-full text-sm font-medium whitespace-nowrap filter-pill",
               selected.includes(item.value)
                 ? "bg-[var(--color-primary)] text-white border border-[var(--color-primary)]"
                 : "border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-primary)]"

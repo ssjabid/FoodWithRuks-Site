@@ -8,9 +8,9 @@
 
 ## Current State
 
-**Phase**: Phase 1 + Phase 2 + partial Phase 4 + Major Restructure complete
+**Phase**: Phase 1 + Phase 2 + partial Phase 4 + Major Restructure + UI Refinement complete
 **Last Updated**: 2026-03-09
-**Last Task Completed**: Major restructure — new pages (Lifestyle, Shop), 4-group recipe filters, landing page overhaul, micro-interactions, image-free design
+**Last Task Completed**: UI Refinement pass — standardized sizing (h-9 pills, h-11 CTAs/inputs), collapsible recipe filters, max-w-6xl layouts, unified card design, footer restructure, homepage tightening, dark mode polish
 
 ## Tech Stack
 
@@ -48,10 +48,11 @@
 - Firebase client + admin SDK config files
 - Micro-interactions: btn-press, card-hover, link-arrow, filter-pill, social-hover, heart bounce, star cascade, ingredient strikethrough, coming-soon-pulse, back-to-top-enter/exit, page enter, scroll reveal with stagger
 - **Intentionally image-free design**: FoodPlaceholder component with SVG fork+knife icons replaces all images site-wide. Real images planned for Phase 5 when Firebase Storage is enabled.
+- **UI Refinement pass complete**: Standardized sizing system (h-9 filter pills/action buttons, h-11 CTA buttons/inputs, w-10 h-10 icon buttons), collapsible recipe filter panel with active count badge, max-w-6xl containers on all pages with py-16 sm:py-20 spacing, unified card design (aspect-[4/3] placeholders, p-4 content, text-base font-bold titles), 4-column footer with inline newsletter, centered hero section, 3-card featured grid, dark mode polished
 
 ## In Progress
 
-_Major restructure complete. All public pages built. Phase 3 blocked by Firebase Auth. Ready for visual QA + polish._
+_UI Refinement complete. All public pages built and polished. Phase 3 blocked by Firebase Auth. Ready for mobile responsiveness audit._
 
 ## Environment Setup
 
@@ -129,6 +130,11 @@ _Major restructure complete. All public pages built. Phase 3 blocked by Firebase
 - **Shadows**: Soft (sm: 2px/8px/0.04, md: 4px/16px/0.06, lg: 8px/32px/0.08)
 - **Animations**: pageEnter, fadeInUp, fadeInLeft, heartBounce, gentlePulse, comingSoonPulse, stagger-1 through stagger-8, star-cascade, ingredient-checked, btn-press, card-hover, link-arrow, filter-pill, social-hover, back-to-top-enter/exit
 - **Corners**: 16px on cards (--radius-lg), 10px on buttons (--radius-sm), 999px on badges/pills (--radius-badge)
+- **Sizing**: Filter pills h-9 px-4 rounded-full, CTA buttons h-11 px-6, inputs h-11, icon buttons w-10 h-10
+- **Containers**: max-w-6xl mx-auto px-4 sm:px-6 lg:px-8
+- **Section spacing**: py-16 sm:py-20, heading-to-content mb-8 sm:mb-10, grid gaps gap-5 sm:gap-6
+- **Page header**: h1 text-3xl sm:text-4xl font-extrabold tracking-tight mb-2, p text-[color-text-secondary] text-base sm:text-lg
+- **Cards**: aspect-[4/3] placeholder, p-4 content, text-base font-bold title, bg-[var(--color-elevated)]
 - **Images**: Intentionally none — FoodPlaceholder component with SVG icons replaces all images. Real images via Firebase Storage planned for Phase 5.
 - All colors as CSS custom properties — swap palette by editing ~12 values
 

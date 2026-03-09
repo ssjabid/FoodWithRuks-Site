@@ -17,9 +17,9 @@ export function Skeleton({ className }: SkeletonProps) {
 
 export function RecipeCardSkeleton() {
   return (
-    <div className="bg-[var(--color-surface)] rounded-[var(--radius-lg)] border border-[var(--color-border)] overflow-hidden shadow-[var(--shadow-sm)]">
+    <div className="bg-[var(--color-elevated)] rounded-[var(--radius-lg)] border border-[var(--color-border)] overflow-hidden shadow-[var(--shadow-sm)]">
       <Skeleton className="aspect-[4/3] w-full rounded-none" />
-      <div className="p-5 space-y-3">
+      <div className="p-4 space-y-3">
         <Skeleton className="h-4 w-20" />
         <Skeleton className="h-5 w-3/4" />
         <div className="flex gap-3">

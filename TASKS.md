@@ -149,11 +149,20 @@
 - [x] Add BackToTop button component
 - [x] Add scroll-based header transition (transparent → blurred/shadowed)
 - [x] Restructure landing page (7 sections: Hero, Featured, Categories, About, Lifestyle, Shop, Newsletter)
-- [x] Update Footer to 4-column layout (Brand, Quick Links, Categories, Social)
+- [x] Update Footer to 4-column layout (Brand, Navigation, Recipes, Connect — with inline newsletter)
 - [x] Update sitemap.ts for new pages (lifestyle, shop, article slugs)
 - [x] Update revalidation API route for new pages
 - [x] Delete /categories page (categories integrated as recipe filters)
 - [x] Remove InstagramSection component
+
+### 2.9 UI Refinement Pass
+- [x] Standardize interactive element sizing: filter pills h-9, CTA buttons h-11, inputs h-11, small action buttons w-10 h-10
+- [x] Redesign recipe filter section: collapsible panel with badge count, sort + favorites inline
+- [x] Tighten all page layouts: max-w-6xl mx-auto, py-16 sm:py-20, consistent page header pattern
+- [x] Unify card design: aspect-[4/3] placeholders, p-4 content, text-base font-bold titles
+- [x] Restructure footer: 4-column (Brand, Navigation, Recipes, Connect) with social icons + inline newsletter
+- [x] Homepage tightening: centered hero, 3-card featured grid, trimmed about snippet
+- [x] Dark mode polish: verified CSS variable system, cards use --color-elevated, fixed header-scrolled CSS
 
 ---
 
@@ -238,8 +247,8 @@
 - [ ] Wire up view count increment on page visit
 
 ### 4.5 Polish
-- [ ] Audit all pages for dark mode consistency
-- [ ] Audit all pages for Ma spacing (generous, intentional)
+- [x] Audit all pages for dark mode consistency *(UI Refinement pass — CSS variable system verified, cards use --color-elevated, placeholder uses --color-surface in dark)*
+- [x] Audit all pages for Ma spacing (generous, intentional) *(UI Refinement pass — all pages py-16 sm:py-20, max-w-6xl, gap-5 sm:gap-6)*
 - [ ] Audit all pages for mobile responsiveness (375px, 768px, 1024px, 1440px)
 - [x] Add scroll fade-in animations on all list/grid sections (useInView hook + ScrollReveal component)
 - [ ] Add smooth page transitions (Next.js loading states)

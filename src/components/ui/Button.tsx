@@ -21,9 +21,9 @@ const variantStyles: Record<Variant, string> = {
 };
 
 const sizeStyles: Record<Size, string> = {
-  sm: "px-3 py-1.5 text-sm",
-  md: "px-5 py-2.5 text-sm",
-  lg: "px-7 py-3 text-base",
+  sm: "h-9 px-3 text-sm font-medium",
+  md: "h-11 px-6 text-sm font-semibold",
+  lg: "h-11 px-6 text-sm font-semibold",
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -32,7 +32,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={cn(
-          "inline-flex items-center justify-center font-medium rounded-[var(--radius-sm)]",
+          "inline-flex items-center justify-center rounded-[var(--radius-sm)]",
           "btn-press",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2",
           "disabled:opacity-50 disabled:pointer-events-none",

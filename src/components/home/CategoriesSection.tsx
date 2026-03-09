@@ -6,14 +6,14 @@ import { RECIPE_CATEGORIES } from "@/lib/constants";
 
 export function CategoriesSection() {
   return (
-    <section className="py-20 sm:py-28 bg-[var(--color-surface)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 sm:py-20 bg-[var(--color-surface)]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal>
-          <div className="mb-12">
-            <h2 className="font-bold tracking-tight text-3xl sm:text-4xl text-[var(--color-text-primary)] mb-3">
+          <div className="mb-8 sm:mb-10">
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">
               Browse by Category
             </h2>
-            <p className="text-[var(--color-text-secondary)] text-lg">
+            <p className="text-[var(--color-text-secondary)] text-base sm:text-lg">
               Find exactly what you&apos;re craving
             </p>
           </div>
@@ -25,7 +25,7 @@ export function CategoriesSection() {
               <Link
                 key={cat.value}
                 href={`/recipes?category=${cat.value}`}
-                className="px-6 py-3 rounded-[var(--radius-badge)] border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-text-primary)] font-medium hover:bg-[var(--color-primary)] hover:text-white hover:border-[var(--color-primary)] filter-pill text-sm"
+                className="h-9 px-4 rounded-full border border-[var(--color-border)] bg-[var(--color-elevated)] text-[var(--color-text-primary)] font-medium hover:bg-[var(--color-primary)] hover:text-white hover:border-[var(--color-primary)] filter-pill text-sm inline-flex items-center"
               >
                 {cat.label}
               </Link>

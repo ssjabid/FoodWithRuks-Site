@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/Card";
+import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { StarRating } from "@/components/ui/StarRating";
 import { FavoriteButton } from "@/components/shared/FavoriteButton";
@@ -17,31 +17,24 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
   return (
     <Link href={`/recipes/${recipe.slug}`} className="group block h-full">
       <Card className="h-full">
-        {/* Placeholder */}
         <div className="relative aspect-[4/3] overflow-hidden">
           <FoodPlaceholder className="w-full h-full" />
-          {/* Favorite button overlay */}
           <div className="absolute top-2 right-2">
             <FavoriteButton slug={recipe.slug} />
           </div>
         </div>
 
-        <CardContent>
-          {/* Category badges */}
+        <div className="p-4">
           <div className="flex flex-wrap gap-1.5 mb-2">
             {recipe.category.slice(0, 2).map((cat) => (
-              <Badge key={cat} variant="default">
-                {cat}
-              </Badge>
+              <Badge key={cat} variant="default">{cat}</Badge>
             ))}
           </div>
 
-          {/* Title */}
-          <h3 className="font-bold tracking-tight text-lg text-[var(--color-text-primary)] mb-2 line-clamp-2">
+          <h3 className="text-base font-bold tracking-tight text-[var(--color-text-primary)] mb-2 line-clamp-2">
             {recipe.title}
           </h3>
 
-          {/* Meta info */}
           <div className="flex items-center justify-between text-sm text-[var(--color-text-secondary)]">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
@@ -59,7 +52,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
               </div>
             )}
           </div>
-        </CardContent>
+        </div>
       </Card>
     </Link>
   );

@@ -16,15 +16,15 @@ export function NewsletterSection() {
   };
 
   return (
-    <section className="py-20 sm:py-28 bg-[var(--color-surface)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 sm:py-20 bg-[var(--color-surface)]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal>
           <div className="max-w-xl mx-auto text-center">
-            <h2 className="font-bold tracking-tight text-3xl sm:text-4xl text-[var(--color-text-primary)] mb-4">
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3">
               Stay Connected
             </h2>
-            <p className="text-[var(--color-text-secondary)] text-lg mb-8">
-              Join the FoodWithRuks family and get new recipes delivered straight to your inbox.
+            <p className="text-[var(--color-text-secondary)] text-base sm:text-lg mb-6">
+              Get new recipes delivered straight to your inbox.
             </p>
 
             {status === "success" ? (
@@ -48,7 +48,7 @@ export function NewsletterSection() {
               </form>
             )}
 
-            <p className="text-xs text-[var(--color-text-secondary)] mt-3">
+            <p className="text-xs text-[var(--color-text-tertiary)] mt-3">
               No spam, ever. Unsubscribe anytime.
             </p>
           </div>

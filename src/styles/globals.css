@@ -153,7 +153,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .header-scrolled {
-  background-color: var(--color-background)/95;
+  background-color: color-mix(in srgb, var(--color-background) 95%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom-color: var(--color-border);

@@ -10,7 +10,7 @@ interface RecipeGridProps {
 export function RecipeGrid({ recipes, loading }: RecipeGridProps) {
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
         {Array.from({ length: 6 }).map((_, i) => (
           <RecipeCardSkeleton key={i} />
         ))}
@@ -31,7 +31,7 @@ export function RecipeGrid({ recipes, loading }: RecipeGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
       {recipes.map((recipe) => (
         <RecipeCard key={recipe.id} recipe={recipe} />
       ))}
