@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-git --use-npm)",
+      "Bash(npm install next@latest react@latest react-dom@latest)",
+      "Bash(npm install --save-dev typescript @types/node @types/react @types/react-dom tailwindcss @tailwindcss/postcss postcss eslint eslint-config-next)",
+      "Bash(npm install firebase firebase-admin react-social-media-embed clsx)",
+      "Bash(npm run build)",
+      "Bash(timeout 15 npm run dev)"
+    ]
+  }
+}

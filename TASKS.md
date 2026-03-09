@@ -1,0 +1,304 @@
+# TASKS.md — FoodWithRuks Task Tracker
+
+> Claude Code: Pick the next unchecked task in order. After completing, mark it `[x]` and update CLAUDE.md.
+
+---
+
+## Phase 1 — Foundation
+
+### 1.1 Project Setup
+- [x] Initialize Next.js 14+ project with TypeScript and App Router
+- [x] Install and configure Tailwind CSS
+- [x] Install dependencies: react-social-media-embed, firebase, firebase-admin
+- [x] Set up project folder structure per INSTRUCTIONS.md
+- [x] Create `.env.example` with all required environment variable keys
+- [ ] Initialize Git repo, create GitHub repository, push initial commit
+- [ ] Connect GitHub repo to Vercel for auto-deployment — **DEFERRED**
+- [ ] Verify deployment works (blank Next.js app live on Vercel) — **DEFERRED**
+
+### 1.2 Firebase Setup
+- [x] Create Firebase project in Firebase Console
+- [x] Enable Firestore *(Auth + Storage deferred)*
+- [x] Generate Firebase client config and add to `.env.local`
+- [x] Generate Firebase Admin service account key
+- [x] Create `src/lib/firebase/config.ts` (client SDK init)
+- [x] Create `src/lib/firebase/admin.ts` (Admin SDK init)
+- [ ] Set up Firestore security rules (public read published, admin write, anonymous comment create)
+- [ ] ~~Set up Storage security rules~~ — **DEFERRED (Storage not enabled)**
+- [ ] Test Firebase connection
+
+### 1.3 Design System
+- [x] Define full CSS custom properties in `globals.css` (light + dark palettes, spacing scale)
+- [x] Configure Tailwind CSS v4 with `@theme` directive (CSS variables)
+- [x] Implement dark mode toggle (system preference detection + manual toggle with localStorage persistence)
+- [x] Set up font: Inter (all text — headings weight 700-800, body weight 400-500) via next/font
+- [x] Create TypeScript interfaces in `src/types/index.ts` (Recipe, Category, Comment, ContactMessage, SiteSettings)
+- [x] Create utility functions in `src/lib/utils.ts` (slugify, formatDate, formatCookTime, cn helper)
+- [x] Create constants in `src/lib/constants.ts` (nav items, dietary tags list, difficulty options)
+
+### 1.4 Base UI Components
+- [x] Button component (primary, secondary, outline, ghost variants; sizes sm/md/lg)
+- [x] Card component (with hover effect — subtle scale + shadow increase)
+- [x] Input component (text, textarea, with label and error state)
+- [x] Badge component (for category tags, dietary tags — pill shape)
+- [x] Skeleton loader component (for recipe cards, text blocks)
+- [x] StarRating component (display + interactive input modes)
+- [x] Modal component (for confirmations, previews)
+- [x] ThemeToggle component (sun/moon icon, smooth transition)
+- [x] Logo component (script font "FoodWithRuks")
+
+### 1.5 Layout
+- [x] Create root layout (`src/app/layout.tsx`) with fonts, theme provider, metadata
+- [x] Build Header component (logo, nav links, theme toggle, mobile hamburger)
+- [x] Build Footer component (nav, social icons, copyright, newsletter CTA)
+- [x] Build MobileMenu component (slide-out overlay with nav links)
+- [ ] Test responsive layout at 375px, 768px, 1024px, 1440px
+- [ ] Verify dark mode across all layout components
+
+### 1.6 Landing Page
+- [x] Build Hero section (gradient background, split logo text)
+- [x] Build Featured Recipes section (asymmetric grid, placeholder cards)
+- [x] Build About Snippet section (text-only, no photo)
+- [x] Build Categories section (pill links from RECIPE_CATEGORIES)
+- [x] Build Instagram Feed section (placeholder grid + CTA) — **Replaced with LifestyleTeaser + ShopTeaser**
+- [x] Build Newsletter Signup section (email input + submit)
+- [x] Assemble full landing page with Ma spacing between sections
+- [x] Add scroll-based fade-in animations (IntersectionObserver)
+- [ ] Test landing page responsiveness + dark mode
+
+---
+
+## Phase 2 — Recipe Display
+
+### 2.1 Recipe Components
+- [x] RecipeCard component (image, title, category badge, cook time, rating, favorite heart)
+- [x] RecipeCard hover state (gentle scale + shadow)
+- [x] RecipeCardSkeleton for loading states
+- [x] RecipeGrid component (responsive grid with generous Ma gaps)
+- [x] FavoriteButton component (heart icon, localStorage toggle)
+- [x] Create `src/lib/favorites.ts` (saveFavorite, removeFavorite, isFavorited, getFavorites)
+
+### 2.2 Recipes Listing Page (`/recipes`)
+- [x] Create `src/lib/firebase/recipes.ts`: getPublishedRecipes() with pagination
+- [x] Build search bar with debounce (useDebounce hook)
+- [x] Build filter bar (4-group system: Category, Meal Type, Special Diet, Special Occasion — pill-based UI)
+- [x] Build sort options (Newest, Most Popular, Quickest)
+- [x] Build recipe grid (using sample data — Firebase integration ready)
+- [x] Build favorites filter toggle ("Show saved recipes")
+- [x] Add loading states (skeleton grid)
+- [x] Add empty state ("No recipes found" with illustration)
+- [x] Test with sample/seed data
+
+### 2.3 Single Recipe Page (`/recipes/[slug]`)
+- [x] Create `src/lib/firebase/recipes.ts`: getRecipeBySlug(), getRelatedRecipes()
+- [x] Build hero image section (fallback placeholder when no image)
+- [x] Build recipe header (title in Inter bold, category badges, date)
+- [x] Build personal story section (distinct styling — accent background, decorative quotes)
+- [x] Build quick stats bar (prep, cook, total time, servings, difficulty)
+- [x] Build ServingsAdjuster component (increase/decrease buttons, recalculates ingredients)
+- [x] Build IngredientList component (checkable checkboxes, grouped by section, adjustable quantities)
+- [x] Build InstructionStep component (numbered cards, optional photo per step)
+- [x] Build Tips & Notes callout box (accent background)
+- [x] Build Nutrition section (collapsible/expandable)
+- [x] Build JumpToRecipe button (sticky on mobile, scrolls to ingredients)
+- [x] Build ShareButtons component (copy link, WhatsApp, Pinterest, Twitter/X)
+- [x] Build PrintButton component
+- [x] Build related recipes section (3 cards grid)
+- [x] Add print stylesheet (in globals.css)
+- [x] Add Schema.org Recipe JSON-LD structured data
+- [ ] Test full page at all breakpoints + dark mode
+
+### 2.4 Category Pages
+- [x] Create `src/lib/firebase/categories.ts`: getCategories(), getCategoryBySlug()
+- [x] Build categories listing page — **REMOVED: categories are now filters within /recipes**
+  - Categories page removed. Categories integrated as filter group in recipes listing.
+- [x] Wire category filtering on `/recipes?category=[slug]`
+
+### 2.5 SEO
+- [x] Set up Next.js Metadata API on all pages (title, description, OG, Twitter)
+- [x] Create dynamic sitemap (`src/app/sitemap.ts`) from published recipes
+- [x] Create `robots.txt`
+- [x] Set up canonical URLs on all pages (via metadataBase)
+- [ ] Create dynamic OG image generation (`/api/og/route.tsx` using @vercel/og)
+- [ ] Verify Schema.org with Google Rich Results Test
+
+---
+
+## Phase 2.5 — New Pages & Restructure
+
+### 2.6 Lifestyle Page
+- [x] Create LifestylePost type in types/index.ts
+- [x] Create sample lifestyle posts data (4 articles)
+- [x] Build lifestyle listing page (/lifestyle) with category filter pills + 2-column grid
+- [x] Build lifestyle article pages (/lifestyle/[slug]) with prose content, share buttons, related posts
+- [x] Build LifestyleTeaser homepage section ("From the Kitchen Journal")
+- [ ] Build lifestyle admin editor (/admin/lifestyle) — create/edit/delete posts
+
+### 2.7 Shop Page
+- [x] Create Product type in types/index.ts
+- [x] Create sample products data (6 products, all coming soon)
+- [x] Build shop page (/shop) with coming-soon banner, category filters, product grid with pulsing badges
+- [x] Build ShopTeaser homepage section ("Shop Coming Soon")
+- [ ] Build shop admin product manager (/admin/products) — CRUD products
+- [ ] Integrate Stripe for payments (future)
+
+### 2.8 Site-wide Polish
+- [x] Remove all Unsplash images — replace with FoodPlaceholder component (SVG icons)
+- [x] Update navigation: Recipes, About, Lifestyle, Shop, Contact (removed Home + Categories)
+- [x] Add micro-interactions: btn-press, card-hover, link-arrow, filter-pill, social-hover, coming-soon-pulse
+- [x] Add BackToTop button component
+- [x] Add scroll-based header transition (transparent → blurred/shadowed)
+- [x] Restructure landing page (7 sections: Hero, Featured, Categories, About, Lifestyle, Shop, Newsletter)
+- [x] Update Footer to 4-column layout (Brand, Quick Links, Categories, Social)
+- [x] Update sitemap.ts for new pages (lifestyle, shop, article slugs)
+- [x] Update revalidation API route for new pages
+- [x] Delete /categories page (categories integrated as recipe filters)
+- [x] Remove InstagramSection component
+
+---
+
+## Phase 3 — Admin CMS
+
+### 3.1 Authentication
+- [ ] Create admin login page (`/admin/login`) — email/password form
+- [ ] Implement Firebase Auth sign-in/sign-out
+- [ ] Create `src/hooks/useAuth.ts` for admin session management
+- [ ] Build admin layout (`/admin/layout.tsx`) with auth guard (redirect if not authed)
+- [ ] Build admin sidebar navigation
+
+### 3.2 Admin Dashboard
+- [ ] Build dashboard stats cards (total recipes, drafts, pending comments, unread messages)
+- [ ] Build quick action buttons (New Recipe, Manage Categories)
+- [ ] Build recent recipes list with status badges
+- [ ] Build pending comments preview list
+
+### 3.3 Recipe Editor
+- [ ] Build recipe form layout (organized sections with clear labels)
+- [ ] Title input with auto-slug generation
+- [ ] Description + Personal Story text areas
+- [ ] Instagram URL input with live embed preview
+- [ ] Category multi-select (from existing categories)
+- [ ] Tags free-form input (comma separated or chips)
+- [ ] Dietary tags checkboxes (Vegetarian, Vegan, Gluten-Free, Dairy-Free, Halal, Nut-Free)
+- [ ] Time inputs (prep, cook) + servings + difficulty dropdown
+- [ ] Dynamic ingredients list (add/remove/reorder rows — Amount, Unit dropdown, Name, Group)
+- [ ] Dynamic instructions list (add/remove/reorder — text area + optional image upload per step)
+- [ ] Hero image upload (drag-and-drop, preview, Firebase Storage with WebP)
+- [ ] Create `src/lib/firebase/storage.ts` (upload with WebP conversion)
+- [ ] Nutrition fields (optional, collapsible section)
+- [ ] SEO fields (meta title, description with char counter, OG image)
+- [ ] Draft / Published toggle + Featured toggle
+- [ ] Create `src/lib/firebase/recipes.ts`: createRecipe(), updateRecipe(), deleteRecipe()
+- [ ] Implement auto-save for drafts (every 30 seconds)
+- [ ] Build preview mode (opens recipe as public page)
+- [ ] Build validation (required fields, helpful error messages)
+
+### 3.4 Recipe List (`/admin/recipes`)
+- [ ] Build table view (Title, Status badge, Category, Date, Edit/Delete)
+- [ ] Filter by status (All / Published / Draft)
+- [ ] Search by title
+- [ ] Delete with confirmation modal
+
+### 3.5 Category Manager (`/admin/categories`)
+- [ ] Build category list with order display
+- [ ] Build category form (Name, Slug, Description, Image upload)
+- [ ] CRUD operations (create, edit, delete with recipe check)
+- [ ] Reorder capability
+
+### 3.6 On-demand Revalidation
+- [x] Create `/api/revalidate/route.ts` — triggers ISR rebuild for recipe/category pages
+- [ ] Call revalidation after recipe publish/update/delete
+
+---
+
+## Phase 4 — Engagement & Polish
+
+### 4.1 Anonymous Comments & Ratings
+- [ ] Build AnonymousCommentForm (star rating + text input, no name/email)
+- [ ] Create `src/lib/spam.ts` (honeypot validation, time check, rate limiting)
+- [x] Create `/api/comments/route.ts` (POST with validation — Firestore save commented out until connected)
+- [ ] Build comments display (approved only, with ratings)
+- [x] Calculate + display average rating on recipe page and cards
+- [ ] Build comment moderation in admin (`/admin/comments`) — approve/delete
+
+### 4.2 Contact Page
+- [x] Build Contact Us page (`/contact`) with form + honeypot
+- [x] Create `/api/contact/route.ts` (POST with validation — Firestore save commented out until connected)
+- [x] Build success/error states
+- [ ] Build messages list in admin (`/admin/messages`) — view, mark read, delete
+
+### 4.3 Content Pages
+- [x] Build About page (personal story, photo placeholder, social links, link to contact) — (updated: text-only, no photo)
+- [x] ~~Build Instagram feed section on homepage~~ — **REMOVED: replaced with LifestyleTeaser + ShopTeaser sections**
+- [x] Build Newsletter signup component (email capture — Firestore save TODO)
+
+### 4.4 Recipe Page Extras
+- [x] Build share buttons functionality (copy link, WhatsApp deep link, Pinterest pin URL, X/Twitter)
+- [x] Build related recipes section (3 cards grid)
+- [ ] Wire up view count increment on page visit
+
+### 4.5 Polish
+- [ ] Audit all pages for dark mode consistency
+- [ ] Audit all pages for Ma spacing (generous, intentional)
+- [ ] Audit all pages for mobile responsiveness (375px, 768px, 1024px, 1440px)
+- [x] Add scroll fade-in animations on all list/grid sections (useInView hook + ScrollReveal component)
+- [ ] Add smooth page transitions (Next.js loading states)
+- [x] Build custom 404 page (warm, on-brand, with link back to recipes)
+- [ ] Add error boundaries
+- [ ] Performance optimization (bundle size, image sizes, lazy loading)
+- [ ] Run Lighthouse audit, fix anything below 90
+
+---
+
+## Phase 5 — Launch Prep
+
+### 5.1 Domain & Deployment
+- [ ] Purchase/configure custom domain (foodwithruks.com)
+- [ ] Set up DNS in Vercel (A record + CNAME for www)
+- [ ] Verify SSL certificate
+- [ ] Test root domain + www redirect
+
+### 5.2 Content Seeding
+- [ ] Create seed script (`scripts/seed.ts`)
+- [ ] Seed 5-10 real recipes with actual photos
+- [ ] Create all recipe categories with images
+- [ ] Configure siteSettings (social links, tagline, hero, Instagram URLs)
+
+### 5.3 Analytics
+- [ ] Enable Vercel Analytics or Google Analytics
+- [ ] Set up Vercel Speed Insights
+- [ ] Verify Core Web Vitals passing
+
+### 5.4 Final QA
+- [ ] Test on real devices (iPhone, Android, iPad, desktop)
+- [ ] Test full recipe flow: create → publish → view → share → comment → approve
+- [ ] Test contact form submission → admin review
+- [ ] Test favorites (save, filter, persist across refresh)
+- [ ] Cross-browser test (Chrome, Safari, Firefox, Edge)
+- [ ] Final Lighthouse audit (target 95+)
+- [ ] Test rich snippets with Google Rich Results Test
+- [ ] Test OG images render on Twitter, Facebook, WhatsApp
+- [ ] Test print mode on recipe pages
+
+---
+
+## Backlog / Future Ideas
+
+- [ ] Scheduled publishing (scheduledAt field ready — needs UI + cron/Cloud Function)
+- [ ] Cooking mode (step-by-step fullscreen, keep screen awake, timers per step)
+- [ ] Recipe video uploads (direct to Storage, not just Instagram embeds)
+- [ ] Recipe collections / meal plans
+- [ ] User accounts (cross-device favorites, profile, saved shopping lists)
+- [ ] Shopping list generator from ingredients
+- [ ] Multi-language support
+- [ ] Progressive Web App (PWA)
+- [ ] RSS feed for recipes
+- [ ] Email notifications for new recipes (Resend integration)
+- [ ] AI-powered recipe suggestions / search
+- [ ] Recipe cost calculator
+- [ ] Affiliate / sponsored recipe integration
+- [ ] Real images: When Firebase Storage is enabled, replace FoodPlaceholder with actual recipe/lifestyle photos
+- [ ] Lifestyle admin editor for creating/editing blog posts
+- [ ] Shop admin product manager with inventory tracking
+- [ ] Stripe integration for shop checkout
+- [ ] Instagram feed section (re-add if desired — component removed but embed library still installed)

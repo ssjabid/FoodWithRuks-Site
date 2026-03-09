@@ -1,0 +1,120 @@
+import { adminDb } from "./admin";
+import type { Recipe } from "@/types";
+
+function docToRecipe(doc: FirebaseFirestore.QueryDocumentSnapshot): Recipe {
+  const data = doc.data();
+  return {
+    id: doc.id,
+    title: data.title,
+    slug: data.slug,
+    description: data.description,
+    personalStory: data.personalStory || "",
+    instagramUrl: data.instagramUrl || "",
+    category: data.category || [],
+    tags: data.tags || [],
+    dietaryTags: data.dietaryTags || [],
+    mealType: data.mealType || [],
+    specialOccasion: data.specialOccasion || [],
+    prepTime: data.prepTime || 0,
+    cookTime: data.cookTime || 0,
+    servings: data.servings || 4,
+    difficulty: data.difficulty || "medium",
+    ingredients: data.ingredients || [],
+    instructions: data.instructions || [],
+    heroImage: data.heroImage || "",
+    tips: data.tips || "",
+    nutrition: data.nutrition || undefined,
+    seo: data.seo || undefined,
+    status: data.status || "draft",
+    featured: data.featured || false,
+    rating: data.rating || { average: 0, count: 0 },
+    viewCount: data.viewCount || 0,
+    createdAt: data.createdAt?.toDate() || new Date(),
+    updatedAt: data.updatedAt?.toDate() || new Date(),
+    publishedAt: data.publishedAt?.toDate() || undefined,
+    scheduledAt: data.scheduledAt?.toDate() || undefined,
+  };
+}
+
+export async function getPublishedRecipes(options?: {
+  limit?: number;
+  category?: string;
+  sortBy?: "newest" | "popular" | "quickest";
+}): Promise<Recipe[]> {
+  const { limit = 20, category, sortBy = "newest" } = options || {};
+
+  let query = adminDb
+    .collection("recipes")
+    .where("status", "==", "published") as FirebaseFirestore.Query;
+
+  if (category) {
+    query = query.where("category", "array-contains", category);
+  }
+
+  switch (sortBy) {
+    case "popular":
+      query = query.orderBy("viewCount", "desc");
+      break;
+    case "quickest":
+      query = query.orderBy("cookTime", "asc");
+      break;
+    default:
+      query = query.orderBy("publishedAt", "desc");
+  }
+
+  query = query.limit(limit);
+
+  const snapshot = await query.get();
+  return snapshot.docs.map(docToRecipe);
+}
+
+export async function getFeaturedRecipes(limit = 4): Promise<Recipe[]> {
+  const snapshot = await adminDb
+    .collection("recipes")
+    .where("status", "==", "published")
+    .where("featured", "==", true)
+    .orderBy("publishedAt", "desc")
+    .limit(limit)
+    .get();
+
+  return snapshot.docs.map(docToRecipe);
+}
+
+export async function getRecipeBySlug(slug: string): Promise<Recipe | null> {
+  const snapshot = await adminDb
+    .collection("recipes")
+    .where("slug", "==", slug)
+    .where("status", "==", "published")
+    .limit(1)
+    .get();
+
+  if (snapshot.empty) return null;
+  return docToRecipe(snapshot.docs[0]);
+}
+
+export async function getRelatedRecipes(recipe: Recipe, limit = 4): Promise<Recipe[]> {
+  if (recipe.category.length === 0) return [];
+
+  const snapshot = await adminDb
+    .collection("recipes")
+    .where("status", "==", "published")
+    .where("category", "array-contains-any", recipe.category)
+    .orderBy("publishedAt", "desc")
+    .limit(limit + 1)
+    .get();
+
+  return snapshot.docs
+    .map(docToRecipe)
+    .filter((r) => r.slug !== recipe.slug)
+    .slice(0, limit);
+}
+
+export async function getAllRecipeSlugs(): Promise<string[]> {
+  const snapshot = await adminDb
+    .collection("recipes")
+    .where("status", "==", "published")
+    .select("slug")
+    .get();
+
+  return snapshot.docs.map((doc) => doc.data().slug);
+}
