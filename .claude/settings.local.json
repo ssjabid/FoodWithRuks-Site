@@ -6,7 +6,30 @@
       "Bash(npm install --save-dev typescript @types/node @types/react @types/react-dom tailwindcss @tailwindcss/postcss postcss eslint eslint-config-next)",
       "Bash(npm install firebase firebase-admin react-social-media-embed clsx)",
       "Bash(npm run build)",
-      "Bash(timeout 15 npm run dev)"
+      "Bash(timeout 15 npm run dev)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/lifestyle)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/shop)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/recipes)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/about)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/contact)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/lifestyle/5-spices-every-home-cook-needs)",
+      "Bash(curl -s http://localhost:3000/lifestyle)",
+      "Bash(curl -s http://localhost:3000/shop)",
+      "Bash(node -e \"console.log\\(require\\(''framer-motion/package.json''\\).version\\)\")",
+      "Bash(for page:*)",
+      "Bash(do echo:*)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost:3000$page\")",
+      "Bash(done)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(npx next:*)",
+      "Bash(node_modules/.bin/next build:*)",
+      "Bash(node node_modules/next/dist/bin/next dev)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :3000)",
+      "Bash(node node_modules/.bin/next build)",
+      "Bash(node node_modules/next/dist/bin/next build)",
+      "Bash(timeout 10 node node_modules/next/dist/bin/next dev --port 3000)"
     ]
   }
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -25,16 +26,22 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     };
   }, [isOpen]);
 
+  // Close menu on route change
   useEffect(() => {
     onClose();
-  }, [pathname, onClose]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
-  return (
+  // Portal to document.body so fixed positioning works correctly
+  // (framer-motion's transform on <header> creates a new stacking context)
+  if (typeof window === "undefined") return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
           <motion.div
-            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm md:hidden"
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm md:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -43,7 +50,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           />
 
           <motion.div
-            className="fixed top-0 right-0 z-50 h-full w-72 bg-[var(--color-surface)] shadow-xl md:hidden"
+            className="fixed top-0 right-0 z-50 h-full w-72 bg-[var(--color-background)] shadow-xl md:hidden"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -87,6 +94,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

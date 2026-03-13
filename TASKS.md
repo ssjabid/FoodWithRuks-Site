@@ -132,14 +132,14 @@
 - [x] Build lifestyle listing page (/lifestyle) with category filter pills + 2-column grid
 - [x] Build lifestyle article pages (/lifestyle/[slug]) with prose content, share buttons, related posts
 - [x] Build LifestyleTeaser homepage section ("From the Kitchen Journal")
-- [ ] Build lifestyle admin editor (/admin/lifestyle) — create/edit/delete posts
+- [x] Build lifestyle admin editor (/admin/lifestyle) — create/edit/delete posts
 
 ### 2.7 Shop Page
 - [x] Create Product type in types/index.ts
 - [x] Create sample products data (6 products, all coming soon)
 - [x] Build shop page (/shop) with coming-soon banner, category filters, product grid with pulsing badges
 - [x] Build ShopTeaser homepage section ("Shop Coming Soon")
-- [ ] Build shop admin product manager (/admin/products) — CRUD products
+- [x] Build shop admin product manager (/admin/shop) — CRUD products
 - [ ] Integrate Stripe for payments (future)
 
 ### 2.8 Site-wide Polish
@@ -181,54 +181,93 @@
 ## Phase 3 — Admin CMS
 
 ### 3.1 Authentication
-- [ ] Create admin login page (`/admin/login`) — email/password form
-- [ ] Implement Firebase Auth sign-in/sign-out
-- [ ] Create `src/hooks/useAuth.ts` for admin session management
-- [ ] Build admin layout (`/admin/layout.tsx`) with auth guard (redirect if not authed)
-- [ ] Build admin sidebar navigation
+- [x] Create admin login page (`/admin/login`) — Google Sign-In (not email/password)
+- [x] Implement Firebase Auth sign-in/sign-out (Google provider)
+- [x] Create `src/hooks/useAuth.ts` for admin session management (Google sign-in + server-side admin verification)
+- [x] Build admin layout (`/admin/layout.tsx`) with auth guard (redirect if not authed)
+- [x] Build admin sidebar navigation (desktop fixed + mobile hamburger drawer)
+- [x] Create `src/lib/firebase/authCheck.ts` — server-side verifyAdminRequest (Bearer token + ADMIN_EMAIL check)
+- [x] Create `src/lib/adminFetch.ts` — authenticated fetch helper
+- [x] Create `/api/admin/verify` endpoint
 
 ### 3.2 Admin Dashboard
-- [ ] Build dashboard stats cards (total recipes, drafts, pending comments, unread messages)
-- [ ] Build quick action buttons (New Recipe, Manage Categories)
-- [ ] Build recent recipes list with status badges
-- [ ] Build pending comments preview list
+- [x] Build dashboard stats cards (total recipes, total posts, pending comments, unread messages)
+- [x] Build quick action buttons (New Recipe, New Post, New Product)
+- [x] Build recent recipes list with status badges
+- [x] Create `/api/admin/stats` endpoint
 
 ### 3.3 Recipe Editor
-- [ ] Build recipe form layout (organized sections with clear labels)
-- [ ] Title input with auto-slug generation
-- [ ] Description + Personal Story text areas
-- [ ] Instagram URL input with live embed preview
-- [ ] Category multi-select (from existing categories)
-- [ ] Tags free-form input (comma separated or chips)
-- [ ] Dietary tags checkboxes (Vegetarian, Vegan, Gluten-Free, Dairy-Free, Halal, Nut-Free)
-- [ ] Time inputs (prep, cook) + servings + difficulty dropdown
-- [ ] Dynamic ingredients list (add/remove/reorder rows — Amount, Unit dropdown, Name, Group)
-- [ ] Dynamic instructions list (add/remove/reorder — text area + optional image upload per step)
-- [ ] Hero image upload (drag-and-drop, preview, Firebase Storage with WebP)
-- [ ] Create `src/lib/firebase/storage.ts` (upload with WebP conversion)
-- [ ] Nutrition fields (optional, collapsible section)
-- [ ] SEO fields (meta title, description with char counter, OG image)
-- [ ] Draft / Published toggle + Featured toggle
-- [ ] Create `src/lib/firebase/recipes.ts`: createRecipe(), updateRecipe(), deleteRecipe()
-- [ ] Implement auto-save for drafts (every 30 seconds)
-- [ ] Build preview mode (opens recipe as public page)
-- [ ] Build validation (required fields, helpful error messages)
+- [x] Build recipe form layout (organized sections with clear labels) — `src/components/admin/RecipeForm.tsx`
+- [x] Title input with auto-slug generation
+- [x] Description + Personal Story text areas
+- [x] Instagram URL input
+- [x] Category multi-select (pill-based)
+- [x] Tags free-form input
+- [x] Dietary tags multi-select (pill-based)
+- [x] Meal type + special occasion multi-select
+- [x] Time inputs (prep, cook) + servings + difficulty dropdown
+- [x] Dynamic ingredients list (add/remove rows — Amount, Unit, Name, Group)
+- [x] Dynamic instructions list (add/remove numbered rows — text + image URL)
+- [ ] ~~Hero image upload (drag-and-drop, Firebase Storage)~~ — **DEFERRED: Storage not enabled. Using URL text field instead.**
+- [ ] ~~Create `src/lib/firebase/storage.ts`~~ — **DEFERRED: Storage not enabled.**
+- [x] Nutrition fields (optional, collapsible section)
+- [x] SEO fields (meta title, description with char counter)
+- [x] Draft / Published toggle + Featured toggle
+- [x] Create `src/lib/firebase/recipes.ts`: createRecipe(), updateRecipe(), deleteRecipe()
+- [ ] Implement auto-save for drafts (every 30 seconds) — **DEFERRED: nice-to-have**
+- [ ] Build preview mode (opens recipe as public page) — **DEFERRED: nice-to-have**
+- [x] Build validation (required fields: title, 1+ category, 1+ ingredient, 1+ instruction)
 
 ### 3.4 Recipe List (`/admin/recipes`)
-- [ ] Build table view (Title, Status badge, Category, Date, Edit/Delete)
-- [ ] Filter by status (All / Published / Draft)
-- [ ] Search by title
-- [ ] Delete with confirmation modal
+- [x] Build table view (Title, Status badge, Category, Date, Edit/Delete)
+- [x] Filter by status (All / Published / Draft)
+- [x] Search by title
+- [x] Delete with confirmation modal
 
 ### 3.5 Category Manager (`/admin/categories`)
-- [ ] Build category list with order display
-- [ ] Build category form (Name, Slug, Description, Image upload)
-- [ ] CRUD operations (create, edit, delete with recipe check)
-- [ ] Reorder capability
+- [ ] ~~Build category list with order display~~ — **DEFERRED: Categories managed inline via recipe editor pill selects**
+- [ ] ~~Build category form~~ — **DEFERRED**
+- [ ] ~~CRUD operations~~ — **DEFERRED**
+- [ ] ~~Reorder capability~~ — **DEFERRED**
 
 ### 3.6 On-demand Revalidation
 - [x] Create `/api/revalidate/route.ts` — triggers ISR rebuild for recipe/category pages
-- [ ] Call revalidation after recipe publish/update/delete
+- [ ] Call revalidation after recipe publish/update/delete — **TODO: wire into admin save actions**
+
+### 3.7 Lifestyle Admin
+- [x] Build lifestyle form (`src/components/admin/LifestyleForm.tsx`) — title, slug, excerpt, category, HTML content, reading time, status
+- [x] Build lifestyle list page (`/admin/lifestyle`) with filter + delete
+- [x] Build new/edit lifestyle pages
+- [x] Create `src/lib/firebase/lifestyle.ts` — full CRUD
+- [x] Create admin API routes (`/api/admin/lifestyle`, `/api/admin/lifestyle/[id]`)
+
+### 3.8 Shop Admin
+- [x] Build product form (`src/components/admin/ProductForm.tsx`) — name, slug, description, price, category, image URL, inStock/comingSoon
+- [x] Build shop list page (`/admin/shop`) with status badges + delete
+- [x] Build new/edit product pages
+- [x] Create `src/lib/firebase/products.ts` — full CRUD
+- [x] Create admin API routes (`/api/admin/shop`, `/api/admin/shop/[id]`)
+
+### 3.9 Comment Moderation
+- [x] Build comments page (`/admin/comments`) with filter (Pending/Approved/All)
+- [x] Approve + delete buttons per comment
+- [x] Create `src/lib/firebase/comments.ts` — getAllComments, updateCommentStatus, deleteComment
+- [x] Create admin API routes (`/api/admin/comments`, `/api/admin/comments/[id]`)
+
+### 3.10 Contact Messages
+- [x] Build messages page (`/admin/messages`) with expandable cards, read/unread indicator
+- [x] Mark read/unread + delete
+- [x] Create `src/lib/firebase/messages.ts` — getAllMessages, markMessageRead, deleteMessage
+- [x] Create admin API routes (`/api/admin/messages`, `/api/admin/messages/[id]`)
+
+### 3.11 Firestore Integration
+- [x] Uncomment Firestore saves in `/api/contact/route.ts`
+- [x] Uncomment Firestore saves in `/api/comments/route.ts`
+- [x] Public recipes page reads from Firestore with sample data fallback
+- [x] Single recipe page reads from Firestore with sample data fallback
+- [x] Homepage featured recipes reads from Firestore with sample data fallback
+- [x] Lifestyle pages read from Firestore with sample data fallback
+- [x] Shop page reads from Firestore with sample data fallback
 
 ---
 
@@ -240,13 +279,13 @@
 - [x] Create `/api/comments/route.ts` (POST with validation — Firestore save commented out until connected)
 - [ ] Build comments display (approved only, with ratings)
 - [x] Calculate + display average rating on recipe page and cards
-- [ ] Build comment moderation in admin (`/admin/comments`) — approve/delete
+- [x] Build comment moderation in admin (`/admin/comments`) — approve/delete
 
 ### 4.2 Contact Page
 - [x] Build Contact Us page (`/contact`) with form + honeypot
 - [x] Create `/api/contact/route.ts` (POST with validation — Firestore save commented out until connected)
 - [x] Build success/error states
-- [ ] Build messages list in admin (`/admin/messages`) — view, mark read, delete
+- [x] Build messages list in admin (`/admin/messages`) — view, mark read, delete
 
 ### 4.3 Content Pages
 - [x] Build About page (personal story, photo placeholder, social links, link to contact) — (updated: text-only, no photo)
@@ -337,7 +376,7 @@
 - [ ] Recipe cost calculator
 - [ ] Affiliate / sponsored recipe integration
 - [ ] Real images: When Firebase Storage is enabled, replace FoodPlaceholder with actual recipe/lifestyle photos
-- [ ] Lifestyle admin editor for creating/editing blog posts
-- [ ] Shop admin product manager with inventory tracking
+- [x] Lifestyle admin editor for creating/editing blog posts
+- [x] Shop admin product manager with inventory tracking
 - [ ] Stripe integration for shop checkout
 - [ ] Instagram feed section (re-add if desired — component removed but embed library still installed)

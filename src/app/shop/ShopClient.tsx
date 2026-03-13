@@ -6,18 +6,22 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { FilterPill } from "@/components/ui/FilterPill";
-import { SAMPLE_PRODUCTS } from "@/lib/sampleData";
 import { PRODUCT_CATEGORIES } from "@/lib/constants";
 import { PageTransition } from "@/components/shared/PageTransition";
 import { StaggerContainer, StaggerItem } from "@/components/shared/StaggerReveal";
+import type { Product } from "@/types";
 
-export function ShopClient() {
+interface ShopClientProps {
+  initialProducts: Product[];
+}
+
+export function ShopClient({ initialProducts }: ShopClientProps) {
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const filteredProducts = useMemo(() => {
-    if (!selectedCategory) return SAMPLE_PRODUCTS;
-    return SAMPLE_PRODUCTS.filter((p) => p.category === selectedCategory);
-  }, [selectedCategory]);
+    if (!selectedCategory) return initialProducts;
+    return initialProducts.filter((p) => p.category === selectedCategory);
+  }, [selectedCategory, initialProducts]);
 
   return (
     <PageTransition>

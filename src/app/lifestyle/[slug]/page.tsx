@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getPostBySlug, getPublishedPosts } from "@/lib/firebase/lifestyle";
 import { SAMPLE_LIFESTYLE_POSTS } from "@/lib/sampleData";
 import { LifestylePostClient } from "./LifestylePostClient";
 
@@ -15,7 +16,11 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = SAMPLE_LIFESTYLE_POSTS.find((p) => p.slug === slug);
+  let post;
+  try {
+    post = await getPostBySlug(slug);
+  } catch { /* fallback */ }
+  if (!post) post = SAMPLE_LIFESTYLE_POSTS.find((p) => p.slug === slug) || null;
   if (!post) return { title: "Not Found" };
 
   return {
@@ -26,13 +31,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function LifestylePostPage({ params }: PageProps) {
   const { slug } = await params;
-  const post = SAMPLE_LIFESTYLE_POSTS.find((p) => p.slug === slug);
 
+  let post;
+  try {
+    post = await getPostBySlug(slug);
+  } catch { /* fallback */ }
+  if (!post) post = SAMPLE_LIFESTYLE_POSTS.find((p) => p.slug === slug) || null;
   if (!post) notFound();
 
-  const relatedPosts = SAMPLE_LIFESTYLE_POSTS
-    .filter((p) => p.slug !== slug)
-    .slice(0, 3);
+  let relatedPosts;
+  try {
+    const allPosts = await getPublishedPosts();
+    relatedPosts = allPosts.filter((p) => p.slug !== slug).slice(0, 3);
+    if (relatedPosts.length === 0) throw new Error("empty");
+  } catch {
+    relatedPosts = SAMPLE_LIFESTYLE_POSTS.filter((p) => p.slug !== slug).slice(0, 3);
+  }
 
   return <LifestylePostClient post={post} relatedPosts={relatedPosts} />;
 }

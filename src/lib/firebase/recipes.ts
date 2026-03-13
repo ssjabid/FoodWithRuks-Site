@@ -118,3 +118,52 @@ export async function getAllRecipeSlugs(): Promise<string[]> {
 
   return snapshot.docs.map((doc) => doc.data().slug);
 }
+
+// Admin CRUD functions
+
+export async function getAllRecipes(): Promise<Recipe[]> {
+  const snapshot = await adminDb
+    .collection("recipes")
+    .orderBy("updatedAt", "desc")
+    .get();
+
+  return snapshot.docs.map(docToRecipe);
+}
+
+export async function getRecipeById(id: string): Promise<Recipe | null> {
+  const doc = await adminDb.collection("recipes").doc(id).get();
+  if (!doc.exists) return null;
+  return { ...docToRecipe(doc as FirebaseFirestore.QueryDocumentSnapshot) };
+}
+
+export async function createRecipe(data: Omit<Recipe, "id" | "createdAt" | "updatedAt">): Promise<string> {
+  const now = new Date();
+  const docData = {
+    ...data,
+    createdAt: now,
+    updatedAt: now,
+    publishedAt: data.status === "published" ? now : null,
+    rating: data.rating || { average: 0, count: 0 },
+    viewCount: data.viewCount || 0,
+  };
+  const ref = await adminDb.collection("recipes").add(docData);
+  return ref.id;
+}
+
+export async function updateRecipe(id: string, data: Partial<Recipe>): Promise<void> {
+  const updateData: Record<string, unknown> = { ...data, updatedAt: new Date() };
+
+  if (data.status === "published") {
+    const existing = await adminDb.collection("recipes").doc(id).get();
+    if (existing.exists && existing.data()?.status !== "published") {
+      updateData.publishedAt = new Date();
+    }
+  }
+
+  delete updateData.id;
+  await adminDb.collection("recipes").doc(id).update(updateData);
+}
+
+export async function deleteRecipe(id: string): Promise<void> {
+  await adminDb.collection("recipes").doc(id).delete();
+}

@@ -1,21 +1,34 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getRecipeBySlug, getRelatedRecipes } from "@/lib/firebase/recipes";
 import { SAMPLE_RECIPES } from "@/lib/sampleData";
 import { SITE_NAME } from "@/lib/constants";
 import { RecipePageClient } from "./RecipePageClient";
+import type { Recipe } from "@/types";
 
-// TODO: Replace with Firebase calls when data is seeded
-function getRecipe(slug: string) {
+async function getRecipe(slug: string): Promise<Recipe | null> {
+  try {
+    const recipe = await getRecipeBySlug(slug);
+    if (recipe) return recipe;
+  } catch {
+    // fall through to sample data
+  }
   return SAMPLE_RECIPES.find((r) => r.slug === slug) || null;
 }
 
-function getRelated(slug: string) {
-  return SAMPLE_RECIPES.filter((r) => r.slug !== slug).slice(0, 3);
+async function getRelated(recipe: Recipe): Promise<Recipe[]> {
+  try {
+    const related = await getRelatedRecipes(recipe, 3);
+    if (related.length > 0) return related;
+  } catch {
+    // fall through
+  }
+  return SAMPLE_RECIPES.filter((r) => r.slug !== recipe.slug).slice(0, 3);
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const recipe = getRecipe(slug);
+  const recipe = await getRecipe(slug);
   if (!recipe) return { title: "Recipe Not Found" };
 
   return {
@@ -36,10 +49,10 @@ export function generateStaticParams() {
 
 export default async function RecipePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const recipe = getRecipe(slug);
+  const recipe = await getRecipe(slug);
   if (!recipe) notFound();
 
-  const relatedRecipes = getRelated(slug);
+  const relatedRecipes = await getRelated(recipe);
 
   // Schema.org JSON-LD
   const jsonLd = {

@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
+import { adminDb } from "@/lib/firebase/admin";
 
 export async function POST(request: Request) {
   try {
     const { recipeId, recipeSlug, text, rating } = await request.json();
 
-    // Validation
     if (!recipeId || !recipeSlug || !text || !rating) {
       return NextResponse.json({ error: "All fields are required" }, { status: 400 });
     }
@@ -17,16 +17,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Rating must be between 1 and 5" }, { status: 400 });
     }
 
-    // TODO: Save to Firestore when connection is tested
-    // const { adminDb } = await import("@/lib/firebase/admin");
-    // await adminDb.collection("comments").add({
-    //   recipeId, recipeSlug, text, rating,
-    //   status: "pending",
-    //   createdAt: new Date(),
-    //   ipHash: "",
-    // });
-
-    console.log("Comment submission:", { recipeSlug, rating, text: text.substring(0, 50) });
+    await adminDb.collection("comments").add({
+      recipeId,
+      recipeSlug,
+      text,
+      rating,
+      status: "pending",
+      createdAt: new Date(),
+      ipHash: "",
+    });
 
     return NextResponse.json({ success: true });
   } catch {

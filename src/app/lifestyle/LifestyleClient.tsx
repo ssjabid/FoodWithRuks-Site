@@ -7,19 +7,23 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { FilterPill } from "@/components/ui/FilterPill";
-import { SAMPLE_LIFESTYLE_POSTS } from "@/lib/sampleData";
 import { LIFESTYLE_CATEGORIES } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
 import { PageTransition } from "@/components/shared/PageTransition";
 import { StaggerContainer, StaggerItem } from "@/components/shared/StaggerReveal";
+import type { LifestylePost } from "@/types";
 
-export function LifestyleClient() {
+interface LifestyleClientProps {
+  initialPosts: LifestylePost[];
+}
+
+export function LifestyleClient({ initialPosts }: LifestyleClientProps) {
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const filteredPosts = useMemo(() => {
-    if (!selectedCategory) return SAMPLE_LIFESTYLE_POSTS;
-    return SAMPLE_LIFESTYLE_POSTS.filter((p) => p.category === selectedCategory);
-  }, [selectedCategory]);
+    if (!selectedCategory) return initialPosts;
+    return initialPosts.filter((p) => p.category === selectedCategory);
+  }, [selectedCategory, initialPosts]);
 
   return (
     <PageTransition>

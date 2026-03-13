@@ -8,15 +8,15 @@
 
 ## Current State
 
-**Phase**: Phase 1 + Phase 2 + partial Phase 4 + Major Restructure + UI Refinement + Animation Overhaul + UI Consistency Pass complete
-**Last Updated**: 2026-03-11
-**Last Task Completed**: Bug fix pass — Fixed favorites toggle (replaced framer-motion initial/animate with CSS keyframe animations + generation-counter key forcing remount on recipe list change), unified Filters button styling to match FilterPill pattern (border, transition-colors, hover states). All pages verified: 200 status, no build errors. Lifestyle/shop pages confirmed working (no crash — pages use shared FilterPill component correctly). Dark mode tested on all pages.
+**Phase**: Phase 1 + Phase 2 + Phase 3 (Admin CMS) + partial Phase 4 + Major Restructure + UI Refinement + Animation Overhaul + UI Consistency Pass + Mobile Responsiveness Pass complete
+**Last Updated**: 2026-03-13
+**Last Task Completed**: Mobile & Tablet Responsiveness Pass — Fixed admin CMS overflow issues (RecipeForm ingredient/instruction rows, timing grid, action buttons; LifestyleForm/ProductForm action buttons), improved admin dashboard/comments card layout for small screens, fixed MobileMenu portal (createPortal to body to escape framer-motion stacking context), fixed hamburger menu useEffect dependency bug. All public and admin pages verified at 375px/768px/1280px with zero horizontal overflow. 39 routes, zero build errors.
 
 ## Tech Stack
 
 - Next.js 14+ (App Router) + TypeScript
 - Tailwind CSS (custom design tokens via CSS variables)
-- Firebase (Firestore enabled, Auth + Storage pending)
+- Firebase (Firestore enabled, Auth with Google Sign-In, Storage pending)
 - Framer Motion (animations + micro-interactions)
 - Vercel (hosting — not connected yet, testing locally first)
 - react-social-media-embed (Instagram embeds)
@@ -51,10 +51,12 @@
 - **Intentionally image-free design**: FoodPlaceholder component with SVG fork+knife icons replaces all images site-wide. Real images planned for Phase 5 when Firebase Storage is enabled.
 - **UI Refinement pass complete**: Standardized sizing system (h-9 filter pills/action buttons, h-11 CTA buttons/inputs, w-10 h-10 icon buttons), collapsible recipe filter panel with active count badge, max-w-6xl containers on all pages with py-16 sm:py-20 spacing, unified card design (aspect-[4/3] placeholders, p-4 content, text-base font-bold titles), 4-column footer with inline newsletter, centered hero section, 3-card featured grid, dark mode polished
 - **UI Consistency pass (DRY)**: Reusable FilterPill component (`src/components/ui/FilterPill.tsx`) used across /recipes, /lifestyle, /shop — eliminated 3 duplicate inline implementations. AnimatedDropdown component (`src/components/ui/AnimatedDropdown.tsx`) replaces native `<select>` with spring-animated popup + chevron rotation + click-outside-close. Standardized all h2 section headings (5 home sections + 1 lifestyle post) from `text-3xl sm:text-4xl font-extrabold` to `text-2xl sm:text-3xl font-bold` — clear hierarchy: h1=extrabold, h2=bold. DRY audit confirmed cards (p-4), badges, text colors, spacing, grid gaps were already consistent.
+- **Phase 3 Admin CMS complete**: Google Auth (signInWithPopup + GoogleAuthProvider), server-side admin verification (ADMIN_EMAIL env var — never exposed to browser), admin dashboard with sidebar layout, full CRUD editors for recipes/lifestyle/products, comment moderation (approve/delete), contact message management (read/unread/delete), all admin API routes protected with Bearer token + verifyAdminRequest helper. No image upload — URL text fields only (Firebase Storage not enabled). Public pages read from Firestore with sample data fallback pattern.
+- **Mobile & Tablet Responsiveness pass complete**: Admin CMS responsive fixes (RecipeForm ingredient rows stack on mobile, instruction image URL below textarea, timing grid 1→3 cols, action buttons stack on mobile; same for LifestyleForm/ProductForm). Admin dashboard date hidden on small screens, comment cards flex-wrap. MobileMenu rendered via `createPortal` to `document.body` to escape framer-motion's `transform` stacking context — full-viewport overlay now works correctly. Fixed useEffect dependency bug that prevented menu from opening. All pages verified at 375px, 768px, 1280px with zero horizontal overflow.
 
 ## In Progress
 
-_UI Refinement complete. All public pages built and polished. Phase 3 blocked by Firebase Auth. Ready for mobile responsiveness audit._
+_Mobile responsiveness pass complete. Ready for: Firebase Auth enablement in Console (Google Sign-In provider), Firestore security rules, image uploads (requires Firebase Storage/Blaze plan)._
 
 ## Environment Setup
 
@@ -62,7 +64,7 @@ _UI Refinement complete. All public pages built and polished. Phase 3 blocked by
 - [x] Tailwind CSS configured with custom theme tokens
 - [x] Firebase project created (project ID: foodwithruks-site)
 - [x] Firestore database enabled (test mode)
-- [ ] ~~Firebase Authentication enabled~~ — **DEFERRED: Enable later in Firebase Console (Build → Authentication → Email/Password)**
+- [ ] Firebase Authentication — **Code complete (Google Sign-In). Enable in Firebase Console: Build → Authentication → Get Started → Google provider → Enable. Then sign in with ADMIN_EMAIL account.**
 - [ ] ~~Firebase Storage enabled~~ — **DEFERRED: Requires Blaze plan. Enable later when ready for image uploads.**
 - [x] Firebase client config obtained
 - [x] Firebase Admin SDK service account key obtained
@@ -77,22 +79,25 @@ _UI Refinement complete. All public pages built and polished. Phase 3 blocked by
 - Working in test mode
 - All recipe CRUD, comments, contact messages will work
 
-### Authentication: ❌ NOT YET ENABLED  
-- **When needed**: Before building Phase 3 (Admin CMS)
-- **How to enable**: Firebase Console → Build → Authentication → Get Started → Email/Password → Enable
-- **Then**: Create admin user (email + password) in the Users tab
-- **Then**: Set admin custom claim (Claude Code will provide a script)
-- **Impact of not having it**: Admin pages won't work, but all public pages will work fine
+### Authentication: ⚠️ CODE COMPLETE — NEEDS CONSOLE SETUP
+- **What's built**: Google Sign-In (client-side) + server-side admin verification (ADMIN_EMAIL env var, never exposed to browser)
+- **How to enable**: Firebase Console → Build → Authentication → Get Started → Google provider → Enable
+- **Then**: Sign in with the Google account matching ADMIN_EMAIL in `.env.local`
+- **Security**: Admin verification is server-side only — `verifyAdminRequest()` checks Firebase ID token + email against `process.env.ADMIN_EMAIL`
+- **No custom claims needed** — admin check is purely email-based, server-side
 
 ### Storage: ❌ NOT YET ENABLED
-- **When needed**: Before building image upload features (Phase 3 recipe editor)
+- **When needed**: Before enabling image upload in admin editors
 - **How to enable**: Upgrade to Firebase Blaze plan (pay-as-you-go, free tier covers ~5GB), then enable Storage
-- **Impact of not having it**: Image upload won't work, but we can use placeholder images for development
-- **Workaround for dev**: Use placeholder image URLs or local /public/images/ folder
+- **Current workaround**: Admin editors use URL text fields for images (no file upload)
 
-### Admin User: ❌ NOT YET CREATED
-- **When needed**: Before testing admin login (Phase 3)
-- **How to create**: After enabling Auth, add user in Firebase Console → Authentication → Users → Add User
+### Firestore Security Rules: ⚠️ NEEDS SETUP
+- **Current**: Test mode (all reads/writes allowed)
+- **Recommended rules**:
+  - Public read on published recipes, lifestyle posts, products
+  - Authenticated admin write on all collections
+  - Anonymous create on comments and contactMessages (with validation)
+  - Deny all other writes
 
 ## Firebase Config
 
@@ -123,6 +128,14 @@ _UI Refinement complete. All public pages built and polished. Phase 3 blocked by
 | `src/types/index.ts` | Shared TypeScript interfaces |
 | `src/components/ui/FilterPill.tsx` | Reusable filter pill (used on recipes, lifestyle, shop) |
 | `src/components/ui/AnimatedDropdown.tsx` | Animated custom dropdown (replaces native select) |
+| `src/hooks/useAuth.ts` | Client-side auth hook (Google sign-in, admin verification) |
+| `src/lib/adminFetch.ts` | Authenticated fetch helper (attaches Bearer token) |
+| `src/lib/firebase/authCheck.ts` | Server-side admin verification (verifyAdminRequest) |
+| `src/lib/firebase/recipes.ts` | Recipe CRUD + public queries |
+| `src/lib/firebase/lifestyle.ts` | Lifestyle post CRUD + public queries |
+| `src/lib/firebase/products.ts` | Product CRUD + public queries |
+| `src/lib/firebase/comments.ts` | Comment moderation (approve/delete) |
+| `src/lib/firebase/messages.ts` | Contact message management |
 
 ## Design System
 
@@ -163,15 +176,17 @@ _UI Refinement complete. All public pages built and polished. Phase 3 blocked by
 - Contact form saves to Firestore (admin reviews in dashboard)
 - Scheduling-ready data model (scheduledAt field for future use)
 - Images intentionally removed during development — FoodPlaceholder component used site-wide
-- **For dev without Auth**: Public pages work fully, skip admin testing until Auth enabled
+- **Admin auth pattern**: Google Sign-In (client) → Bearer token → server-side verifyAdminRequest (Firebase Admin verifyIdToken + ADMIN_EMAIL check). ADMIN_EMAIL is server-side only (no NEXT_PUBLIC_ prefix)
+- **Public pages Firestore pattern**: Server component fetches from Firestore, falls back to sample data if empty/error
+- **For dev without Auth**: Public pages work fully, skip admin testing until Auth enabled in Firebase Console
 - Navigation: Recipes, About, Lifestyle, Shop, Contact (no Home or Categories links)
 - 4-group recipe filter system with pill-based UI (Category, Meal Type, Special Diet, Special Occasion)
 
 ## Known Issues / Blockers
 
-- Firebase Auth not enabled (blocks admin CMS — Phase 3)
-- Firebase Storage not enabled (blocks image upload — Phase 3)
-- Neither blocks Phase 1 or Phase 2 development
+- Firebase Auth not enabled in Console (code complete — enable Google provider to test admin CMS)
+- Firebase Storage not enabled (blocks image upload — admin editors use URL text fields as workaround)
+- Firestore security rules still in test mode (need to configure proper rules before production)
 
 ## Commands
 

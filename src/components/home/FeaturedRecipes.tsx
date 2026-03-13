@@ -6,10 +6,14 @@ import { StaggerContainer, StaggerItem } from "@/components/shared/StaggerReveal
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { FoodPlaceholder } from "@/components/shared/FoodPlaceholder";
-import { SAMPLE_RECIPES } from "@/lib/sampleData";
+import type { Recipe } from "@/types";
 
-export function FeaturedRecipes() {
-  const featured = SAMPLE_RECIPES.filter((r) => r.featured).slice(0, 3);
+interface FeaturedRecipesProps {
+  recipes: Recipe[];
+}
+
+export function FeaturedRecipes({ recipes }: FeaturedRecipesProps) {
+  const featured = recipes.slice(0, 3);
 
   return (
     <section className="py-16 sm:py-20">
