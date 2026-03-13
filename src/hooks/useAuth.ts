@@ -47,9 +47,8 @@ export function useAuth() {
   };
 
   const logout = async () => {
-    await signOut(auth);
     setIsAdmin(false);
-    setAdminChecked(false);
+    await signOut(auth);
   };
 
   return { user, loading, isAdmin, adminChecked, signInWithGoogle, logout };

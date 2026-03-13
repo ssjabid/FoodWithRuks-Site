@@ -10,7 +10,7 @@
 
 **Phase**: Phase 1 + Phase 2 + Phase 3 (Admin CMS) + partial Phase 4 + Major Restructure + UI Refinement + Animation Overhaul + UI Consistency Pass + Mobile Responsiveness Pass complete
 **Last Updated**: 2026-03-13
-**Last Task Completed**: Multi-admin support — ADMIN_EMAIL env var now supports comma-separated emails for multiple admins (verify route + authCheck). Previous: Mobile & Tablet Responsiveness Pass — Fixed admin CMS overflow issues (RecipeForm ingredient/instruction rows, timing grid, action buttons; LifestyleForm/ProductForm action buttons), improved admin dashboard/comments card layout for small screens, fixed MobileMenu portal (createPortal to body to escape framer-motion stacking context), fixed hamburger menu useEffect dependency bug. All public and admin pages verified at 375px/768px/1280px with zero horizontal overflow. 39 routes, zero build errors.
+**Last Task Completed**: Logout redirect fix — logout now sets isAdmin=false immediately before signOut, ensuring admin layout's auth guard redirects to /admin/login without flicker. Removed unnecessary adminChecked reset. Previous: Multi-admin support (comma-separated ADMIN_EMAIL). Previous: Mobile & Tablet Responsiveness Pass — Fixed admin CMS overflow issues (RecipeForm ingredient/instruction rows, timing grid, action buttons; LifestyleForm/ProductForm action buttons), improved admin dashboard/comments card layout for small screens, fixed MobileMenu portal (createPortal to body to escape framer-motion stacking context), fixed hamburger menu useEffect dependency bug. All public and admin pages verified at 375px/768px/1280px with zero horizontal overflow. 39 routes, zero build errors.
 
 ## Tech Stack
 
