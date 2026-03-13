@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { NAV_ITEMS } from "@/lib/constants";
 import { Logo } from "@/components/ui/Logo";
@@ -23,46 +24,54 @@ export function Header() {
   }, []);
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-40 transition-all duration-300",
-        scrolled
-          ? "bg-[var(--color-background)]/95 backdrop-blur-xl border-b border-[var(--color-border)] shadow-[var(--shadow-sm)]"
-          : "bg-[var(--color-background)] border-b border-transparent"
-      )}
+    <motion.header
+      className="sticky top-0 z-40 border-b"
+      animate={{
+        backgroundColor: scrolled
+          ? "color-mix(in srgb, var(--color-background) 80%, transparent)"
+          : "var(--color-background)",
+        backdropFilter: scrolled ? "blur(20px)" : "blur(0px)",
+        borderBottomColor: scrolled ? "var(--color-border)" : "transparent",
+        boxShadow: scrolled
+          ? "0 1px 3px rgba(0,0,0,0.05)"
+          : "0 0 0 rgba(0,0,0,0)",
+      }}
+      transition={{ duration: 0.3 }}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14 sm:h-16">
           <Logo />
 
-          {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-8">
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "relative text-sm font-medium py-1 transition-colors duration-200 hover:text-[var(--color-primary)]",
-                  pathname === item.href
-                    ? "text-[var(--color-primary)]"
-                    : "text-[var(--color-text-secondary)]"
-                )}
-              >
-                {item.label}
-                {/* Active indicator bar */}
-                <span
+          {/* Desktop nav — sliding pill */}
+          <nav className="hidden md:flex items-center gap-1">
+            {NAV_ITEMS.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
                   className={cn(
-                    "absolute -bottom-[18px] left-0 right-0 h-0.5 bg-[var(--color-primary)] transition-transform duration-200 origin-left",
-                    pathname === item.href ? "scale-x-100" : "scale-x-0"
+                    "relative px-4 py-1.5 text-sm transition-colors duration-200",
+                    isActive
+                      ? "text-[var(--color-primary)] font-semibold"
+                      : "text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] font-medium"
                   )}
-                />
-              </Link>
-            ))}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="nav-pill"
+                      className="absolute inset-0 bg-[var(--color-primary)]/10 rounded-full"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10">{item.label}</span>
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="flex items-center gap-1">
             <ThemeToggle />
-            {/* Mobile hamburger */}
             <button
               className="md:hidden p-2 rounded-[var(--radius-sm)] hover:bg-[var(--color-secondary)] transition-colors"
               onClick={() => setMenuOpen(true)}
@@ -77,6 +86,6 @@ export function Header() {
       </div>
 
       <MobileMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
-    </header>
+    </motion.header>
   );
 }

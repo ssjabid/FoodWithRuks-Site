@@ -164,6 +164,18 @@
 - [x] Homepage tightening: centered hero, 3-card featured grid, trimmed about snippet
 - [x] Dark mode polish: verified CSS variable system, cards use --color-elevated, fixed header-scrolled CSS
 
+### 2.10 UI Consistency Pass (DRY)
+- [x] Create reusable FilterPill component (`src/components/ui/FilterPill.tsx`) — single source for all filter pills
+- [x] Create AnimatedDropdown component (`src/components/ui/AnimatedDropdown.tsx`) — replaces native `<select>` with animated dropdown
+- [x] Replace duplicate inline FilterPill in LifestyleClient.tsx with shared component
+- [x] Replace duplicate inline FilterPill in ShopClient.tsx with shared component
+- [x] Replace inline filter pills in RecipesClient.tsx FilterGroup with shared FilterPill
+- [x] Replace Favorites button on /recipes with FilterPill
+- [x] Replace native `<select>` sort dropdown on /recipes with AnimatedDropdown
+- [x] Standardize all h2 section headings: `text-2xl sm:text-3xl font-bold tracking-tight` (FeaturedRecipes, CategoriesSection, LifestyleTeaser, ShopTeaser, AboutSnippet, LifestylePostClient)
+- [x] DRY audit: confirmed cards (p-4), badges, text colors, spacing, grid gaps already consistent
+- [x] Build passes with no errors
+
 ---
 
 ## Phase 3 — Admin CMS
@@ -251,11 +263,29 @@
 - [x] Audit all pages for Ma spacing (generous, intentional) *(UI Refinement pass — all pages py-16 sm:py-20, max-w-6xl, gap-5 sm:gap-6)*
 - [ ] Audit all pages for mobile responsiveness (375px, 768px, 1024px, 1440px)
 - [x] Add scroll fade-in animations on all list/grid sections (useInView hook + ScrollReveal component)
-- [ ] Add smooth page transitions (Next.js loading states)
+- [x] Add smooth page transitions *(Animation overhaul — framer-motion PageTransition on all pages, fade+slide)*
 - [x] Build custom 404 page (warm, on-brand, with link back to recipes)
 - [ ] Add error boundaries
 - [ ] Performance optimization (bundle size, image sizes, lazy loading)
 - [ ] Run Lighthouse audit, fix anything below 90
+
+### 4.6 Animation Overhaul (framer-motion)
+- [x] Install framer-motion, create PageTransition + StaggerReveal shared components
+- [x] iOS-style sliding nav pill with layoutId + glassmorphism header on scroll
+- [x] Mobile menu right drawer with AnimatePresence + staggered items
+- [x] Card hover lift (-8px) + inner zoom (scale 1.06) on placeholders
+- [x] Button fill-from-left hover effect + whileHover lift + whileTap press
+- [x] Staggered scroll cascade on all grids (StaggerContainer/StaggerItem, spring physics)
+- [x] Bouncy filter pills on recipes, lifestyle, shop pages (scale 1→1.08→1)
+- [x] Heart bounce + glow ring on favorite toggle
+- [x] Inline newsletter submit (rounded-full container, AnimatePresence success state)
+- [x] Sun/moon morph dark mode toggle (AnimatePresence mode="wait" with rotation)
+- [x] Scroll progress bar on recipe detail pages (useScroll + useSpring)
+- [x] Share buttons with whileHover/whileTap + "Copied" morph (AnimatePresence)
+- [x] Animated ingredient checkboxes (bounce fill + line-through + opacity fade)
+- [x] Star rating cascade animation (60ms delay per star, spring physics)
+- [x] Nutrition section AnimatePresence expand/collapse + animated chevron
+- [x] PageTransition on all pages: home, recipes, recipe detail, lifestyle, lifestyle articles, shop, about, contact, 404
 
 ---
 

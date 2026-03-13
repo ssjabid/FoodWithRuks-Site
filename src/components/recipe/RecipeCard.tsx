@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { StarRating } from "@/components/ui/StarRating";
@@ -17,8 +20,14 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
   return (
     <Link href={`/recipes/${recipe.slug}`} className="group block h-full">
       <Card className="h-full">
-        <div className="relative aspect-[4/3] overflow-hidden">
-          <FoodPlaceholder className="w-full h-full" />
+        <div className="relative overflow-hidden">
+          <motion.div
+            className="aspect-[4/3]"
+            whileHover={{ scale: 1.06 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
+            <FoodPlaceholder className="w-full h-full" />
+          </motion.div>
           <div className="absolute top-2 right-2">
             <FavoriteButton slug={recipe.slug} />
           </div>

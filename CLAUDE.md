@@ -8,15 +8,16 @@
 
 ## Current State
 
-**Phase**: Phase 1 + Phase 2 + partial Phase 4 + Major Restructure + UI Refinement complete
-**Last Updated**: 2026-03-09
-**Last Task Completed**: UI Refinement pass — standardized sizing (h-9 pills, h-11 CTAs/inputs), collapsible recipe filters, max-w-6xl layouts, unified card design, footer restructure, homepage tightening, dark mode polish
+**Phase**: Phase 1 + Phase 2 + partial Phase 4 + Major Restructure + UI Refinement + Animation Overhaul + UI Consistency Pass complete
+**Last Updated**: 2026-03-11
+**Last Task Completed**: Bug fix pass — Fixed favorites toggle (replaced framer-motion initial/animate with CSS keyframe animations + generation-counter key forcing remount on recipe list change), unified Filters button styling to match FilterPill pattern (border, transition-colors, hover states). All pages verified: 200 status, no build errors. Lifestyle/shop pages confirmed working (no crash — pages use shared FilterPill component correctly). Dark mode tested on all pages.
 
 ## Tech Stack
 
 - Next.js 14+ (App Router) + TypeScript
 - Tailwind CSS (custom design tokens via CSS variables)
 - Firebase (Firestore enabled, Auth + Storage pending)
+- Framer Motion (animations + micro-interactions)
 - Vercel (hosting — not connected yet, testing locally first)
 - react-social-media-embed (Instagram embeds)
 
@@ -46,9 +47,10 @@
 - Sample data: 6 recipes (with mealType + specialOccasion), 4 lifestyle posts, 6 products
 - Print stylesheet (hides nav, footer, non-essential elements)
 - Firebase client + admin SDK config files
-- Micro-interactions: btn-press, card-hover, link-arrow, filter-pill, social-hover, heart bounce, star cascade, ingredient strikethrough, coming-soon-pulse, back-to-top-enter/exit, page enter, scroll reveal with stagger
+- **Framer Motion animation overhaul**: iOS-style sliding nav pill (layoutId), page transitions (fade+slide on all pages), card hover lift (-8px) + inner zoom (1.06), button fill-from-left hover effect, staggered scroll cascades (StaggerContainer/StaggerItem with spring physics), glassmorphism header (blur+opacity on scroll), mobile menu right drawer (AnimatePresence + spring), bouncy filter pills (scale 1→1.08→1), heart bounce+glow ring, inline newsletter submit, sun/moon morph dark mode toggle (AnimatePresence), scroll progress bar on recipe pages (useScroll+useSpring), share buttons with whileHover/whileTap + "Copied" morph, animated ingredient checkboxes (bounce + line-through), star rating cascade (60ms delay per star), nutrition section AnimatePresence expand/collapse
 - **Intentionally image-free design**: FoodPlaceholder component with SVG fork+knife icons replaces all images site-wide. Real images planned for Phase 5 when Firebase Storage is enabled.
 - **UI Refinement pass complete**: Standardized sizing system (h-9 filter pills/action buttons, h-11 CTA buttons/inputs, w-10 h-10 icon buttons), collapsible recipe filter panel with active count badge, max-w-6xl containers on all pages with py-16 sm:py-20 spacing, unified card design (aspect-[4/3] placeholders, p-4 content, text-base font-bold titles), 4-column footer with inline newsletter, centered hero section, 3-card featured grid, dark mode polished
+- **UI Consistency pass (DRY)**: Reusable FilterPill component (`src/components/ui/FilterPill.tsx`) used across /recipes, /lifestyle, /shop — eliminated 3 duplicate inline implementations. AnimatedDropdown component (`src/components/ui/AnimatedDropdown.tsx`) replaces native `<select>` with spring-animated popup + chevron rotation + click-outside-close. Standardized all h2 section headings (5 home sections + 1 lifestyle post) from `text-3xl sm:text-4xl font-extrabold` to `text-2xl sm:text-3xl font-bold` — clear hierarchy: h1=extrabold, h2=bold. DRY audit confirmed cards (p-4), badges, text colors, spacing, grid gaps were already consistent.
 
 ## In Progress
 
@@ -119,6 +121,8 @@ _UI Refinement complete. All public pages built and polished. Phase 3 blocked by
 | `src/lib/firebase/config.ts` | Firebase client config |
 | `src/lib/firebase/admin.ts` | Firebase Admin config |
 | `src/types/index.ts` | Shared TypeScript interfaces |
+| `src/components/ui/FilterPill.tsx` | Reusable filter pill (used on recipes, lifestyle, shop) |
+| `src/components/ui/AnimatedDropdown.tsx` | Animated custom dropdown (replaces native select) |
 
 ## Design System
 

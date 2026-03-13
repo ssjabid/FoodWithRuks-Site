@@ -1,3 +1,6 @@
+"use client";
+
+import { useRef } from "react";
 import { RecipeCard } from "./RecipeCard";
 import { RecipeCardSkeleton } from "@/components/ui/Skeleton";
 import type { Recipe } from "@/types";
@@ -8,6 +11,15 @@ interface RecipeGridProps {
 }
 
 export function RecipeGrid({ recipes, loading }: RecipeGridProps) {
+  // Generation counter forces key change → full remount → CSS animations replay
+  const prevIdsRef = useRef("");
+  const genRef = useRef(0);
+  const currentIds = recipes.map((r) => r.id).join(",");
+  if (currentIds !== prevIdsRef.current) {
+    prevIdsRef.current = currentIds;
+    genRef.current++;
+  }
+
   if (loading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
@@ -32,8 +44,14 @@ export function RecipeGrid({ recipes, loading }: RecipeGridProps) {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-      {recipes.map((recipe) => (
-        <RecipeCard key={recipe.id} recipe={recipe} />
+      {recipes.map((recipe, i) => (
+        <div
+          key={`${genRef.current}-${recipe.id}`}
+          className="animate-grid-item"
+          style={{ animationDelay: `${i * 60}ms` }}
+        >
+          <RecipeCard recipe={recipe} />
+        </div>
       ))}
     </div>
   );
