@@ -10,7 +10,7 @@
 
 **Phase**: Phase 1 + Phase 2 + Phase 3 (Admin CMS) + partial Phase 4 + Major Restructure + UI Refinement + Animation Overhaul + UI Consistency Pass + Mobile Responsiveness Pass complete
 **Last Updated**: 2026-03-13
-**Last Task Completed**: Mobile & Tablet Responsiveness Pass — Fixed admin CMS overflow issues (RecipeForm ingredient/instruction rows, timing grid, action buttons; LifestyleForm/ProductForm action buttons), improved admin dashboard/comments card layout for small screens, fixed MobileMenu portal (createPortal to body to escape framer-motion stacking context), fixed hamburger menu useEffect dependency bug. All public and admin pages verified at 375px/768px/1280px with zero horizontal overflow. 39 routes, zero build errors.
+**Last Task Completed**: Multi-admin support — ADMIN_EMAIL env var now supports comma-separated emails for multiple admins (verify route + authCheck). Previous: Mobile & Tablet Responsiveness Pass — Fixed admin CMS overflow issues (RecipeForm ingredient/instruction rows, timing grid, action buttons; LifestyleForm/ProductForm action buttons), improved admin dashboard/comments card layout for small screens, fixed MobileMenu portal (createPortal to body to escape framer-motion stacking context), fixed hamburger menu useEffect dependency bug. All public and admin pages verified at 375px/768px/1280px with zero horizontal overflow. 39 routes, zero build errors.
 
 ## Tech Stack
 
@@ -80,11 +80,12 @@ _Mobile responsiveness pass complete. Ready for: Firebase Auth enablement in Con
 - All recipe CRUD, comments, contact messages will work
 
 ### Authentication: ⚠️ CODE COMPLETE — NEEDS CONSOLE SETUP
-- **What's built**: Google Sign-In (client-side) + server-side admin verification (ADMIN_EMAIL env var, never exposed to browser)
+- **What's built**: Google Sign-In (client-side) + server-side admin verification (ADMIN_EMAIL env var, comma-separated for multiple admins, never exposed to browser)
 - **How to enable**: Firebase Console → Build → Authentication → Get Started → Google provider → Enable
 - **Then**: Sign in with the Google account matching ADMIN_EMAIL in `.env.local`
-- **Security**: Admin verification is server-side only — `verifyAdminRequest()` checks Firebase ID token + email against `process.env.ADMIN_EMAIL`
+- **Security**: Admin verification is server-side only — `verifyAdminRequest()` checks Firebase ID token + email against `process.env.ADMIN_EMAIL` (comma-separated list)
 - **No custom claims needed** — admin check is purely email-based, server-side
+- **Multiple admins**: Set `ADMIN_EMAIL=admin1@gmail.com,admin2@gmail.com` in `.env.local`
 
 ### Storage: ❌ NOT YET ENABLED
 - **When needed**: Before enabling image upload in admin editors
@@ -176,7 +177,7 @@ _Mobile responsiveness pass complete. Ready for: Firebase Auth enablement in Con
 - Contact form saves to Firestore (admin reviews in dashboard)
 - Scheduling-ready data model (scheduledAt field for future use)
 - Images intentionally removed during development — FoodPlaceholder component used site-wide
-- **Admin auth pattern**: Google Sign-In (client) → Bearer token → server-side verifyAdminRequest (Firebase Admin verifyIdToken + ADMIN_EMAIL check). ADMIN_EMAIL is server-side only (no NEXT_PUBLIC_ prefix)
+- **Admin auth pattern**: Google Sign-In (client) → Bearer token → server-side verifyAdminRequest (Firebase Admin verifyIdToken + ADMIN_EMAIL check). ADMIN_EMAIL supports comma-separated list for multiple admins. Server-side only (no NEXT_PUBLIC_ prefix)
 - **Public pages Firestore pattern**: Server component fetches from Firestore, falls back to sample data if empty/error
 - **For dev without Auth**: Public pages work fully, skip admin testing until Auth enabled in Firebase Console
 - Navigation: Recipes, About, Lifestyle, Shop, Contact (no Home or Categories links)

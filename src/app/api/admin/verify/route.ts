@@ -11,9 +11,10 @@ export async function POST(request: Request) {
 
     const decodedToken = await adminAuth.verifyIdToken(token);
     const userEmail = decodedToken.email;
-    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminEmails = (process.env.ADMIN_EMAIL || "").split(",").map(e => e.trim().toLowerCase());
+    const isAdmin = adminEmails.includes(userEmail?.toLowerCase() || "");
 
-    if (!adminEmail || userEmail !== adminEmail) {
+    if (!isAdmin) {
       return NextResponse.json({ isAdmin: false }, { status: 403 });
     }
 
